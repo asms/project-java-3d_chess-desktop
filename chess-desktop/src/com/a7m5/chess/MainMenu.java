@@ -29,6 +29,7 @@ public class MainMenu {
 	private JFrame frame;
 	private JTextField ipTextField;
 	private JTextField portTextField;
+	private JTextField serverPortTextField;
 
 	/**
 	 * Launch the application.
@@ -62,10 +63,16 @@ public class MainMenu {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
 			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -82,7 +89,13 @@ public class MainMenu {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GdxChessGame.startServer();
+				try {
+					int port = Integer.valueOf(serverPortTextField.getText());
+
+					GdxChessGame.startServer(port);
+					
+				} catch(NumberFormatException e) {
+				}
 			}
 		});
 		frame.getContentPane().add(btnStartServer, "2, 2");
@@ -100,7 +113,36 @@ public class MainMenu {
 				}
 			}
 		});
-		frame.getContentPane().add(btnKillServer, "4, 2, left, default");
+		frame.getContentPane().add(btnKillServer, "4, 2, fill, default");
+		
+		JLabel label_1 = new JLabel("Port");
+		frame.getContentPane().add(label_1, "2, 4");
+		
+		serverPortTextField = new JTextField("8082");
+		frame.getContentPane().add(serverPortTextField, "4, 4, fill, default");
+		serverPortTextField.setColumns(10);
+		serverPortTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				try {
+					Integer.valueOf(serverPortTextField.getText());
+					serverPortTextField.setForeground(Color.BLACK);
+				} catch(NumberFormatException e) {
+					serverPortTextField.setForeground(Color.RED);
+				}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				
+			}
+		});
 		
 		JButton btnStartClient = new JButton("Start Client");
 		btnStartClient.addActionListener(new ActionListener() {
@@ -127,13 +169,7 @@ public class MainMenu {
 				
 			}
 		});
-		frame.getContentPane().add(btnStartClient, "2, 4");
-		
-		JLabel lblIp = new JLabel("IP Address");
-		frame.getContentPane().add(lblIp, "2, 6");
-		
-		JLabel lblPort = new JLabel("Port");
-		frame.getContentPane().add(lblPort, "4, 6");
+		frame.getContentPane().add(btnStartClient, "2, 6");
 		
 		ipTextField = new JTextField("127.0.0.1");
 		ipTextField.addKeyListener(new KeyListener() {
@@ -159,8 +195,13 @@ public class MainMenu {
 				
 			}
 		});
-		frame.getContentPane().add(ipTextField, "2, 8, 2, 1, fill, default");
-		ipTextField.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("IP Address");
+		frame.getContentPane().add(lblNewLabel, "2, 8");
+		
+		JLabel lblPort = new JLabel("Port");
+		frame.getContentPane().add(lblPort, "4, 8");
+		frame.getContentPane().add(ipTextField, "2, 10");
 		
 		portTextField = new JTextField("8082");
 		portTextField.addKeyListener(new KeyListener() {
@@ -185,11 +226,11 @@ public class MainMenu {
 				
 			}
 		});
-		frame.getContentPane().add(portTextField, "4, 8, left, default");
+		frame.getContentPane().add(portTextField, "4, 10, fill, fill");
 		portTextField.setColumns(10);
 		
 		JButton btnSettings = new JButton("Settings");
-		frame.getContentPane().add(btnSettings, "2, 10");
+		frame.getContentPane().add(btnSettings, "2, 12");
 	}
 
 }
