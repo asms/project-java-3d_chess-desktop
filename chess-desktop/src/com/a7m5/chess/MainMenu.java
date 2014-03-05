@@ -154,7 +154,7 @@ public class MainMenu {
 				cfg.width = 512 + 200;
 				cfg.height = 512;
 				
-				ChessOwner chessOwner = whiteButton.isSelected() ? ChessOwner.TOP : ChessOwner.BOTTOM;
+				ChessOwner chessOwner = whiteButton.isSelected() ? ChessOwner.WHITE : ChessOwner.BLACK;
 				
 				String address = ipTextField.getText();
 				InetAddressValidator v = InetAddressValidator.getInstance();
