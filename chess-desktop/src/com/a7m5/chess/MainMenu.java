@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
+import com.a7m5.chess.chesspieces.ChessOwner;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.jgoodies.forms.layout.FormLayout;
@@ -16,11 +17,14 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
 import org.apache.commons.validator.routines.InetAddressValidator;
+
+import javax.swing.JRadioButton;
 
 public class MainMenu {
 
@@ -28,6 +32,8 @@ public class MainMenu {
 	private JTextField ipTextField;
 	private JTextField portTextField;
 	private JTextField serverPortTextField;
+	private JRadioButton whiteButton;
+	private JRadioButton blackButton;
 
 	/**
 	 * Launch the application.
@@ -145,8 +151,10 @@ public class MainMenu {
 				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 				cfg.title = "Chess";
 				cfg.useGL20 = false;
-				cfg.width = 512;
+				cfg.width = 512 + 200;
 				cfg.height = 512;
+				
+				ChessOwner chessOwner = whiteButton.isSelected() ? ChessOwner.TOP : ChessOwner.BOTTOM;
 				
 				String address = ipTextField.getText();
 				InetAddressValidator v = InetAddressValidator.getInstance();
@@ -154,7 +162,7 @@ public class MainMenu {
 					try {
 						int port = Integer.valueOf(portTextField.getText());
 
-						new LwjglApplication(new GdxChessGame(address, port), cfg);
+						new LwjglApplication(new GdxChessGame(chessOwner, address, port), cfg);
 						
 					} catch(NumberFormatException e) {
 					}
@@ -222,8 +230,19 @@ public class MainMenu {
 		frame.getContentPane().add(portTextField, "4, 10, fill, fill");
 		portTextField.setColumns(10);
 		
+		whiteButton = new JRadioButton("White");
+		whiteButton.setSelected(true);
+		frame.getContentPane().add(whiteButton, "2, 12");
+		
+		blackButton = new JRadioButton("Black");
+		frame.getContentPane().add(blackButton, "4, 12");
+		
+		ButtonGroup radioButtonGroup = new ButtonGroup();
+		radioButtonGroup.add(whiteButton);
+		radioButtonGroup.add(blackButton);
+		
 		JButton btnSettings = new JButton("Settings");
-		frame.getContentPane().add(btnSettings, "2, 12");
+		frame.getContentPane().add(btnSettings, "2, 14");
 	}
 
 }
