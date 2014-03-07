@@ -65,7 +65,7 @@ public class MainMenu {
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
-			new RowSpec[] {
+				new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -82,30 +82,30 @@ public class MainMenu {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
-		
+
 		JButton btnStartServer = new JButton("Start Server");
 		btnStartServer.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					int port = Integer.valueOf(serverPortTextField.getText());
 
-					GdxChessGame.startServer(port);
-					
+					ChessGame3D.startServer(port);
+
 				} catch(NumberFormatException e) {
 				}
 			}
 		});
 		frame.getContentPane().add(btnStartServer, "2, 2");
-		
+
 		JButton btnKillServer = new JButton("Kill Server");
 		btnKillServer.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GdxChessGame.killServer();
+					ChessGame3D.killServer();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -113,10 +113,10 @@ public class MainMenu {
 			}
 		});
 		frame.getContentPane().add(btnKillServer, "4, 2, fill, default");
-		
+
 		JLabel label_1 = new JLabel("Port");
 		frame.getContentPane().add(label_1, "2, 4");
-		
+
 		serverPortTextField = new JTextField("8082");
 		frame.getContentPane().add(serverPortTextField, "4, 4, fill, default");
 		serverPortTextField.setColumns(10);
@@ -124,7 +124,7 @@ public class MainMenu {
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				
+
 			}
 
 			@Override
@@ -139,13 +139,13 @@ public class MainMenu {
 
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				
+
 			}
 		});
-		
+
 		JButton btnStartClient = new JButton("Start Client");
 		btnStartClient.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
@@ -153,31 +153,31 @@ public class MainMenu {
 				cfg.useGL20 = false;
 				cfg.width = 512 + 200;
 				cfg.height = 512;
-				
+
 				ChessOwner chessOwner = whiteButton.isSelected() ? ChessOwner.WHITE : ChessOwner.BLACK;
-				
+
 				String address = ipTextField.getText();
 				InetAddressValidator v = InetAddressValidator.getInstance();
 				if(v.isValid(address)) {
 					try {
 						int port = Integer.valueOf(portTextField.getText());
 
-						new LwjglApplication(new GdxChessGame(chessOwner, address, port), cfg);
-						
+						new LwjglApplication(new ChessGame3D(chessOwner, address, port), cfg);
+
 					} catch(NumberFormatException e) {
 					}
 				}
-				
+
 			}
 		});
 		frame.getContentPane().add(btnStartClient, "2, 6");
-		
+
 		ipTextField = new JTextField("127.0.0.1");
 		ipTextField.addKeyListener(new KeyListener() {
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				
+
 			}
 
 			@Override
@@ -193,23 +193,23 @@ public class MainMenu {
 
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				
+
 			}
 		});
-		
+
 		JLabel lblNewLabel = new JLabel("IP Address");
 		frame.getContentPane().add(lblNewLabel, "2, 8");
-		
+
 		JLabel lblPort = new JLabel("Port");
 		frame.getContentPane().add(lblPort, "4, 8");
 		frame.getContentPane().add(ipTextField, "2, 10");
-		
+
 		portTextField = new JTextField("8082");
 		portTextField.addKeyListener(new KeyListener() {
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				
+
 			}
 
 			@Override
@@ -224,23 +224,23 @@ public class MainMenu {
 
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				
+
 			}
 		});
 		frame.getContentPane().add(portTextField, "4, 10, fill, fill");
 		portTextField.setColumns(10);
-		
+
 		whiteButton = new JRadioButton("White");
 		whiteButton.setSelected(true);
 		frame.getContentPane().add(whiteButton, "2, 12");
-		
+
 		blackButton = new JRadioButton("Black");
 		frame.getContentPane().add(blackButton, "4, 12");
-		
+
 		ButtonGroup radioButtonGroup = new ButtonGroup();
 		radioButtonGroup.add(whiteButton);
 		radioButtonGroup.add(blackButton);
-		
+
 		JButton btnSettings = new JButton("Settings");
 		frame.getContentPane().add(btnSettings, "2, 14");
 	}
