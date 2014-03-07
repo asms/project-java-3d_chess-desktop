@@ -1,3 +1,5 @@
+// Peter's test comment.
+
 package com.a7m5.chess;
 
 import java.awt.Color;
@@ -10,6 +12,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 import com.a7m5.chess.chesspieces.ChessOwner;
+import com.a7m5.chess.editor.ChessGameEditor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.jgoodies.forms.layout.FormLayout;
@@ -19,6 +22,7 @@ import com.jgoodies.forms.factories.FormFactory;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
@@ -241,8 +245,32 @@ public class MainMenu {
 		radioButtonGroup.add(whiteButton);
 		radioButtonGroup.add(blackButton);
 
-		JButton btnSettings = new JButton("Settings");
+		JButton btnSettings = new JButton("Chess Editor");
 		frame.getContentPane().add(btnSettings, "2, 14");
+		btnSettings.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JOptionPane myOption = new JOptionPane();
+				try{
+					int requestedBoardSize = Integer.parseInt(myOption.showInputDialog("Enter the desired board size. No larger than 32 "));
+					if((8 <= requestedBoardSize) && (32 >= requestedBoardSize)){
+						LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+						cfg.title = "Chess Game Editor";
+						cfg.useGL20 = false;
+						cfg.width = 512+400;	// Larger sidebar for editor.
+						cfg.height = 512;
+						new LwjglApplication(new ChessGameEditor(requestedBoardSize), cfg);
+					} else {
+						myOption.showMessageDialog(null, "That was bad input. Your requested board size, " + requestedBoardSize + ", is not a number between 8 and 32.");
+					}
+				} catch (NumberFormatException e1){
+					myOption.showMessageDialog(null, "That was bad input. Not a valid number.");
+				}
+
+			}
+		});
+
 	}
 
 }
