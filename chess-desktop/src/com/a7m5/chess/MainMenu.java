@@ -13,8 +13,11 @@ import javax.swing.JFrame;
 
 import com.a7m5.chess.chesspieces.ChessOwner;
 import com.a7m5.chess.editor.ChessGameEditor;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
+import com.badlogic.gdx.backends.lwjgl.LwjglServerSocket;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -154,12 +157,11 @@ public class MainMenu {
 			public void actionPerformed(ActionEvent event) {
 				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 				cfg.title = "Chess";
-				cfg.useGL20 = false;
-				cfg.width = 512 + 200;
+				cfg.useGL20 = true;
+				cfg.width = 712;
 				cfg.height = 512;
-
+				cfg.samples = 4;
 				ChessOwner chessOwner = whiteButton.isSelected() ? ChessOwner.WHITE : ChessOwner.BLACK;
-
 				String address = ipTextField.getText();
 				InetAddressValidator v = InetAddressValidator.getInstance();
 				if(v.isValid(address)) {
