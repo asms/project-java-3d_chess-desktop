@@ -270,7 +270,7 @@ public class MainMenu {
 						cfg.useGL20 = false;
 						cfg.width = 512+400;	// Larger sidebar for editor.
 						cfg.height = 512;
-						new LwjglApplication(new ChessGameEditor(requestedBoardSize), cfg);
+						new LwjglApplication(new ChessGameEditor(requestedBoardSize, gamePieceSet), cfg);
 					} else {
 						myOption.showMessageDialog(null, "That was bad input. Your requested board size, " + requestedBoardSize + ", is not a number between 8 and 32.");
 					}
