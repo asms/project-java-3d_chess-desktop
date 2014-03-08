@@ -1,5 +1,3 @@
-// Peter's test comment.
-
 package com.a7m5.chess;
 
 import java.awt.Color;
@@ -253,6 +251,8 @@ public class MainMenu {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
+				ResourceGrabber myGrab = new ResourceGrabber("C:\\Users\\Peter\\git\\weird-chess\\chess\\assets\\data");
+				/*
 				JOptionPane myOption = new JOptionPane();
 				try{
 					int requestedBoardSize = Integer.parseInt(myOption.showInputDialog("Enter the desired board size. No larger than 32 "));
@@ -269,7 +269,7 @@ public class MainMenu {
 				} catch (NumberFormatException e1){
 					myOption.showMessageDialog(null, "That was bad input. Not a valid number.");
 				}
-
+				 */
 			}
 		});
 
