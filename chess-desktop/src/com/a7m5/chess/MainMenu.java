@@ -10,12 +10,10 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 import com.a7m5.chess.chesspieces.ChessOwner;
+import com.a7m5.chess.chesspieces.ChessPieceSet;
 import com.a7m5.chess.editor.ChessGameEditor;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
-import com.badlogic.gdx.backends.lwjgl.LwjglServerSocket;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -39,7 +37,7 @@ public class MainMenu {
 	private JTextField serverPortTextField;
 	private JRadioButton whiteButton;
 	private JRadioButton blackButton;
-
+	ChessPieceSet gamePieceSet;
 	/**
 	 * Launch the application.
 	 */
@@ -90,16 +88,18 @@ public class MainMenu {
 
 		JButton btnStartServer = new JButton("Start Server");
 		btnStartServer.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				// Grab the set of chess pieces before starting the server.
+				ResourceGrabber myGrab = new ResourceGrabber("C:\\Users\\Peter\\git\\weird-chess\\chess\\assets\\data");
+				gamePieceSet = new ChessPieceSet(myGrab.getGrabbedPieces());
 				try {
 					int port = Integer.valueOf(serverPortTextField.getText());
-
-					ChessGame3D.startServer(port);
+					ChessGame3D.startServer(port, gamePieceSet);
 
 				} catch(NumberFormatException e) {
 				}
+				
 			}
 		});
 		frame.getContentPane().add(btnStartServer, "2, 2");
@@ -166,7 +166,7 @@ public class MainMenu {
 					try {
 						int port = Integer.valueOf(portTextField.getText());
 
-						new LwjglApplication(new ChessGame3D(chessOwner, address, port), cfg);
+						new LwjglApplication(new ChessGame3D(gamePieceSet, chessOwner, address, port), cfg);
 
 					} catch(NumberFormatException e) {
 					}
@@ -245,14 +245,22 @@ public class MainMenu {
 		radioButtonGroup.add(whiteButton);
 		radioButtonGroup.add(blackButton);
 
-		JButton btnSettings = new JButton("Chess Editor");
+		JButton btnSettings = new JButton("Board Editor.");
 		frame.getContentPane().add(btnSettings, "2, 14");
 		btnSettings.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				ResourceGrabber myGrab = new ResourceGrabber("C:\\Users\\Peter\\git\\weird-chess\\chess\\assets\\data");
 				/*
+				ResourceGrabber myGrab = new ResourceGrabber("C:\\Users\\Peter\\git\\weird-chess\\chess\\assets\\data");
+				ChessPieceSet ourSet = new ChessPieceSet(myGrab.getGrabbedPieces());
+				 */
+				/*
+				ResourceThrower myThrow = new ResourceThrower("C:\\Users\\Peter\\git\\weird-chess\\chess\\assets\\data");
+				myThrow.createPieceFile(new Queen(null));
+				 */
+
+				
 				JOptionPane myOption = new JOptionPane();
 				try{
 					int requestedBoardSize = Integer.parseInt(myOption.showInputDialog("Enter the desired board size. No larger than 32 "));
@@ -269,7 +277,8 @@ public class MainMenu {
 				} catch (NumberFormatException e1){
 					myOption.showMessageDialog(null, "That was bad input. Not a valid number.");
 				}
-				 */
+				
+				
 			}
 		});
 
