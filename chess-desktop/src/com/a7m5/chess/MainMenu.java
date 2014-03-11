@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.net.URISyntaxException;
 
 import javax.swing.JFrame;
 
@@ -90,14 +91,13 @@ public class MainMenu {
 		btnStartServer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// Grab the set of chess pieces before starting the server.
-				ResourceGrabber myGrab = new ResourceGrabber("C:\\Users\\Peter\\git\\weird-chess\\chess\\assets\\data");
-				gamePieceSet = new ChessPieceSet(myGrab.getGrabbedPieces());
 				try {
 					int port = Integer.valueOf(serverPortTextField.getText());
-					ChessGame3D.startServer(port, gamePieceSet);
+					ChessGame3D.startServer(port);
 
 				} catch(NumberFormatException e) {
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
 				}
 				
 			}
