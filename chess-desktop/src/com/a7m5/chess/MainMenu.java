@@ -96,8 +96,6 @@ public class MainMenu {
 					ChessGame3D.startServer(port);
 
 				} catch(NumberFormatException e) {
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
 				}
 				
 			}
