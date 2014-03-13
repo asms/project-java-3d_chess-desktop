@@ -38,7 +38,6 @@ public class MainMenu {
 	private JTextField serverPortTextField;
 	private JRadioButton whiteButton;
 	private JRadioButton blackButton;
-	ChessPieceSet gamePieceSet;
 	/**
 	 * Launch the application.
 	 */
@@ -164,7 +163,7 @@ public class MainMenu {
 					try {
 						int port = Integer.valueOf(portTextField.getText());
 
-						new LwjglApplication(new ChessGame3D(gamePieceSet, chessOwner, address, port), cfg);
+						new LwjglApplication(new ChessGame3D(chessOwner, address, port), cfg);
 
 					} catch(NumberFormatException e) {
 					}
@@ -268,7 +267,7 @@ public class MainMenu {
 						cfg.useGL20 = false;
 						cfg.width = 512+400;	// Larger sidebar for editor.
 						cfg.height = 512;
-						new LwjglApplication(new ChessGameEditor(requestedBoardSize, gamePieceSet), cfg);
+						new LwjglApplication(new ChessGameEditor(requestedBoardSize), cfg);
 					} else {
 						myOption.showMessageDialog(null, "That was bad input. Your requested board size, " + requestedBoardSize + ", is not a number between 8 and 32.");
 					}
