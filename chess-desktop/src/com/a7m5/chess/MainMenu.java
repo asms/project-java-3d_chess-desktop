@@ -6,12 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.net.URISyntaxException;
+import java.io.File;
+import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 
 import com.a7m5.chess.chesspieces.ChessOwner;
-import com.a7m5.chess.chesspieces.ChessPieceSet;
 import com.a7m5.chess.editor.ChessGameEditor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -22,6 +22,7 @@ import com.jgoodies.forms.factories.FormFactory;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -36,13 +37,18 @@ public class MainMenu {
 	private JTextField ipTextField;
 	private JTextField portTextField;
 	private JTextField serverPortTextField;
+	private JTextField cacheDirectoryTextField;
 	private JRadioButton whiteButton;
 	private JRadioButton blackButton;
+	private Preferences prefs;
+	private String cacheDir;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+
+
 			public void run() {
 				try {
 					MainMenu window = new MainMenu();
@@ -56,7 +62,67 @@ public class MainMenu {
 
 
 	public MainMenu() {
+		Preferences prefsRoot = Preferences.userRoot();
+		prefs = prefsRoot.node("com.a7m5.chess.MainMenu");
 		initialize();
+
+		cacheDir = prefs.get("cacheDir", null);
+		if(cacheDir != null) {
+			if(prepareCacheDirectory()) {
+				cacheDirectoryTextField.setForeground(Color.BLACK);
+				cacheDirectoryTextField.setText(cacheDir);
+			}
+		} else {
+			cacheDirectoryTextField.setText("Select a cache directory!!!");
+			cacheDirectoryTextField.setForeground(Color.RED);
+		}
+	}
+
+	public void selectCacheDirectory() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnedValue = chooser.showOpenDialog(frame);
+		if(returnedValue == JFileChooser.APPROVE_OPTION) {
+			cacheDir = chooser.getSelectedFile().getAbsolutePath();
+			if(prepareCacheDirectory()) {
+				cacheDirectoryTextField.setForeground(Color.BLACK);
+				cacheDirectoryTextField.setText(cacheDir);
+			}
+		}
+
+	}
+
+	public boolean prepareCacheDirectory() {
+		boolean success = true;
+		File cacheDirectory = new File(cacheDir);
+		try {
+			if(!cacheDirectory.exists()) {
+				success = cacheDirectory.mkdir();
+			}
+			if(success) {
+				File piecesDir = new File(cacheDir + "/pieces/");
+				File boardsDir = new File(cacheDir + "/boards/");
+				if(!piecesDir.exists()) {
+					success = piecesDir.mkdir();
+				}
+				if(success && !boardsDir.exists()) {
+					success = boardsDir.mkdir();
+				}
+				if(success) {
+					updatePreferences();
+					return true;
+				}
+			}
+		} catch(SecurityException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public void updatePreferences() {
+		prefs.put("cacheDir", cacheDir);
+		ChessGame3D.setCacheDirectory(cacheDir);
 	}
 
 	private void initialize() {
@@ -84,6 +150,8 @@ public class MainMenu {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
 
 		JButton btnStartServer = new JButton("Start Server");
@@ -96,7 +164,7 @@ public class MainMenu {
 
 				} catch(NumberFormatException e) {
 				}
-				
+
 			}
 		});
 		frame.getContentPane().add(btnStartServer, "2, 2");
@@ -152,7 +220,7 @@ public class MainMenu {
 			public void actionPerformed(ActionEvent event) {
 				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 				cfg.title = "Chess";
-				cfg.useGL20 = true;
+				cfg.useGL30 = false;
 				cfg.width = 712;
 				cfg.height = 512;
 				cfg.samples = 4;
@@ -242,8 +310,23 @@ public class MainMenu {
 		radioButtonGroup.add(whiteButton);
 		radioButtonGroup.add(blackButton);
 
+		cacheDirectoryTextField = new JTextField();
+		cacheDirectoryTextField.setEditable(false);
+		frame.getContentPane().add(cacheDirectoryTextField, "2, 14, fill, default");
+		cacheDirectoryTextField.setColumns(10);
+
+		JButton selectCacheDirectoryButton = new JButton("Select Cache Directory");
+		selectCacheDirectoryButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				selectCacheDirectory();
+			}
+		});
+		frame.getContentPane().add(selectCacheDirectoryButton, "4, 14");
+
 		JButton btnSettings = new JButton("Board Editor.");
-		frame.getContentPane().add(btnSettings, "2, 14");
+		frame.getContentPane().add(btnSettings, "2, 16");
 		btnSettings.addActionListener(new ActionListener() {
 
 			@Override
@@ -257,14 +340,14 @@ public class MainMenu {
 				myThrow.createPieceFile(new Queen(null));
 				 */
 
-				
+
 				JOptionPane myOption = new JOptionPane();
 				try{
 					int requestedBoardSize = Integer.parseInt(myOption.showInputDialog("Enter the desired board size. No larger than 32 "));
 					if((8 <= requestedBoardSize) && (32 >= requestedBoardSize)){
 						LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 						cfg.title = "Chess Game Editor";
-						cfg.useGL20 = false;
+						cfg.useGL30 = false;
 						cfg.width = 512+400;	// Larger sidebar for editor.
 						cfg.height = 512;
 						new LwjglApplication(new ChessGameEditor(requestedBoardSize), cfg);
@@ -274,8 +357,8 @@ public class MainMenu {
 				} catch (NumberFormatException e1){
 					myOption.showMessageDialog(null, "That was bad input. Not a valid number.");
 				}
-				
-				
+
+
 			}
 		});
 
