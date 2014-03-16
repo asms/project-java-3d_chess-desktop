@@ -342,21 +342,14 @@ public class MainMenu {
 
 
 				JOptionPane myOption = new JOptionPane();
-				try{
-					int requestedBoardSize = Integer.parseInt(myOption.showInputDialog("Enter the desired board size. No larger than 32 "));
-					if((8 <= requestedBoardSize) && (32 >= requestedBoardSize)){
-						LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-						cfg.title = "Chess Game Editor";
-						cfg.useGL30 = false;
-						cfg.width = 512+400;	// Larger sidebar for editor.
-						cfg.height = 512;
-						new LwjglApplication(new ChessGameEditor(requestedBoardSize), cfg);
-					} else {
-						myOption.showMessageDialog(null, "That was bad input. Your requested board size, " + requestedBoardSize + ", is not a number between 8 and 32.");
-					}
-				} catch (NumberFormatException e1){
-					myOption.showMessageDialog(null, "That was bad input. Not a valid number.");
-				}
+
+				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+				cfg.title = "Chess Game Editor";
+				cfg.useGL30 = false;
+				cfg.width = 512+300;	// Larger sidebar for editor.
+				cfg.height = 512;
+				new LwjglApplication(new ChessGameEditor(), cfg);
+
 
 
 			}
